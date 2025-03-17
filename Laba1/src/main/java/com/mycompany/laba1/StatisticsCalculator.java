@@ -1,14 +1,14 @@
-    //+1. среднее геометрическое для каждой выборки
-    //+2. среднее арифметическое для каждой выборки
-    //+3. оценку стандартного отклонения для каждой выборки
-    //+4. размах каждой выборки
+//+1. среднее геометрическое для каждой выборки
+//+2. среднее арифметическое для каждой выборки
+//+3. оценку стандартного отклонения для каждой выборки
+//+4. размах каждой выборки
 //-5. коэффициенты ковариации для всех пар случайных чисел
-    //+6. количество элементов в каждой выборке
-    //+7. коэффициент вариации для каждой выборки
-    //+8. для каждой выборки построить доверительный интервал для мат. ожидания 
-    //   (Предполагая, что случайные числа подчиняются нормальному закону распределения)
-    //+9. оценку дисперсии для каждой выборки
-    //+10. максимумы и минимумы для каждой выборки
+//+6. количество элементов в каждой выборке
+//+7. коэффициент вариации для каждой выборки
+//+8. для каждой выборки построить доверительный интервал для мат. ожидания 
+//   (Предполагая, что случайные числа подчиняются нормальному закону распределения)
+//+9. оценку дисперсии для каждой выборки
+//+10. максимумы и минимумы для каждой выборки
 package com.mycompany.laba1;
 
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -118,31 +119,31 @@ public class StatisticsCalculator {
     //8. для каждой выборки построить доверительный интервал для мат. ожидания 
     //   (Предполагая, что случайные числа подчиняются нормальному закону распределения)
     public Map<String, Double> calculateUpperBoundOfConfidenceInterval(double confidenceLevel) {
-        Map<String, Double> results = new HashMap<>();
-        NormalDistribution normalDistribution = new NormalDistribution();
-        double t = normalDistribution.inverseCumulativeProbability(1 - (1 - confidenceLevel) / 2);
-        
+        Map<String, Double> results = new HashMap<>();        
         for (String key : statisticsMap.keySet()) {
             double mean = statisticsMap.get(key).getMean();
-            double stdDev = statisticsMap.get(key).getStandardDeviation();
-            double marginOfError = t * (stdDev / Math.sqrt(statisticsMap.get(key).getN()));
+            double marginOfError = calculateMarginOfError(statisticsMap.get(key), confidenceLevel);
             results.put(key, mean + marginOfError);
         }
         return results;
     }
     
-        public Map<String, Double> calculateLowerBoundOfConfidenceInterval(double confidenceLevel) {
-        Map<String, Double> results = new HashMap<>();
-        NormalDistribution normalDistribution = new NormalDistribution();
-        double t = normalDistribution.inverseCumulativeProbability(1 - (1 - confidenceLevel) / 2);
-        
+    public Map<String, Double> calculateLowerBoundOfConfidenceInterval(double confidenceLevel) {
+        Map<String, Double> results = new HashMap<>();        
         for (String key : statisticsMap.keySet()) {
             double mean = statisticsMap.get(key).getMean();
-            double stdDev = statisticsMap.get(key).getStandardDeviation();
-            double marginOfError = t * (stdDev / Math.sqrt(statisticsMap.get(key).getN()));
+            double marginOfError = calculateMarginOfError(statisticsMap.get(key), confidenceLevel);
             results.put(key, mean - marginOfError);
         }
         return results;
+    }
+    
+    public double calculateMarginOfError(DescriptiveStatistics stats, double confidenceLevel) {
+        int n = (int) stats.getN();
+        TDistribution tDist = new TDistribution(n - 1);
+        double t = tDist.inverseCumulativeProbability(1 - (1 - confidenceLevel) / 2);
+        double marginOfError = t*(stats.getStandardDeviation()/Math.sqrt(stats.getN()));
+        return marginOfError;   
     }
  
     //9. оценку дисперсии для каждой выборки

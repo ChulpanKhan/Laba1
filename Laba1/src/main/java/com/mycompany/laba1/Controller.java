@@ -31,7 +31,6 @@ public class Controller {
     private void handleImport() {
         File file = FileChooserView.selectInputFile();
         if (file == null) {
-            //JOptionPane.showMessageDialog(view, "Файл не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
             view.getErrorPane("Файл не выбран!");
             return;
         }
@@ -44,56 +43,36 @@ public class Controller {
             
             dataStorage = ExcelReader.importData(file, selectedSheet);
             if (dataStorage.isEmpty()) {
-                //JOptionPane.showMessageDialog(view, "Выбранный лист пуст!", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 view.getErrorPane("Выбранный лист пуст!");
                 return;
             }
-            JOptionPane.showMessageDialog(view, "Файл успешно сохранен: " + file.getAbsolutePath(), "Информация", JOptionPane.INFORMATION_MESSAGE);
-
+            view.getInformationPane("Файл успешно сохранен: " + file.getAbsolutePath());
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(view, "Ошибка загрузки файла", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            view.getErrorPane("Ошибка загрузки файла");
         }
     
     }
 
     private void handleExport() {
         if (dataStorage.isEmpty()) {
-            //JOptionPane.showMessageDialog(view, "Файл для импорта не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
             view.getErrorPane("Файл для импорта не выбран!");
             return;
         }
         File outputFile = FileChooserView.selectOutputFile();
         if (outputFile == null) {
-            //JOptionPane.showMessageDialog(view, "Файл не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
             view.getErrorPane("Файл не выбран!");
                 return;
         }
         
-        StatisticsCalculator calculator = new StatisticsCalculator(dataStorage.getData());
-
-        Map<String, Map<String, Double>> statistics = new LinkedHashMap<>();
-        statistics.put("Среднее геометрическое", calculator.calculateGeometricMean());
-        statistics.put("Среднее арифметическое", calculator.calculateMean());
-        statistics.put("Стандартное отклонение", calculator.calculateStandardDeviation());
-        statistics.put("Размах", calculator.calculateRange());
-        statistics.put("Количество элементов", calculator.calculateSize());
-        statistics.put("Коэффициент вариации", calculator.calculateCoefOfVariance());
-        //statistics.put("Доверительный интервал", calculator.calculateConfidenceInterval(0.95));
-        statistics.put("Дисперсия", calculator.calculateVariance());
-        statistics.put("Минимум", calculator.calculateMin());
-        statistics.put("Максимум", calculator.calculateMax());
-        statistics.put("Нижняя", calculator.calculateLowerBoundOfConfidenceInterval(0.95));
-        statistics.put("Верхняя", calculator.calculateUpperBoundOfConfidenceInterval(0.95));
-        Map<String, Map<String, Double>> covarianceMatrix = calculator.calculateCovarianceMatrix();       
+        StatisticsCollector collector = new StatisticsCollector(dataStorage.getData());
+        Map<String, Map<String, Double>> statistics = collector.collectBasicStatistics();
+        Map<String, Map<String, Double>> covarianceMatrix = collector.getCovarianceMatrix();
 
         try {
             ExcelWriter.writeStatistics(outputFile, statistics, covarianceMatrix);
-            System.out.println("Файл успешно сохранен: " + outputFile.getAbsolutePath());
-            JOptionPane.showMessageDialog(view, "Файл успешно сохранен: " + outputFile.getAbsolutePath(), "Информация", JOptionPane.INFORMATION_MESSAGE);
-                //return;
+            view.getInformationPane("Файл успешно сохранен: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
             view.getErrorPane("Ошибка при сохранении файла: " + e.getMessage());
-            System.out.println("Ошибка при сохранении файла: " + e.getMessage());
         }
     }
 
