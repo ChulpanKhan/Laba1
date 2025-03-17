@@ -84,10 +84,10 @@ public class Controller {
         statistics.put("Максимум", calculator.calculateMax());
         statistics.put("Нижняя", calculator.calculateLowerBoundOfConfidenceInterval(0.95));
         statistics.put("Верхняя", calculator.calculateUpperBoundOfConfidenceInterval(0.95));
-               
+        Map<String, Map<String, Double>> covarianceMatrix = calculator.calculateCovarianceMatrix();       
 
         try {
-            ExcelWriter.writeStatistics(outputFile, statistics);
+            ExcelWriter.writeStatistics(outputFile, statistics, covarianceMatrix);
             System.out.println("Файл успешно сохранен: " + outputFile.getAbsolutePath());
             JOptionPane.showMessageDialog(view, "Файл успешно сохранен: " + outputFile.getAbsolutePath(), "Информация", JOptionPane.INFORMATION_MESSAGE);
                 //return;

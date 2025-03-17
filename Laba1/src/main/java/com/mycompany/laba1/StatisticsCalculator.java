@@ -83,7 +83,7 @@ public class StatisticsCalculator {
                 dataArray[row][col] = values[row];
             }
         }
-        Covariance covariance = new Covariance(dataArray);
+        Covariance covariance = new Covariance(dataArray); 
         RealMatrix covarianceMatrix = covariance.getCovarianceMatrix();
         //обратно из марицы в hashmap
         Map<String, Map<String, Double>> result = new LinkedHashMap<>();
