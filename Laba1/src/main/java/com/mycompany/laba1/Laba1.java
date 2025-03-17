@@ -4,6 +4,8 @@ package com.mycompany.laba1;
 public class Laba1 {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+      //GUIView view = new GUIView();
+        new Controller();
+        
     }
 }
