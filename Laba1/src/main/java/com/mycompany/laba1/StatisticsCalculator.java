@@ -11,11 +11,15 @@
     //+10. максимумы и минимумы для каждой выборки
 package com.mycompany.laba1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.correlation.Covariance;
+import org.apache.commons.math3.linear.RealMatrix;
 
 public class StatisticsCalculator {
     private final Map<String, DescriptiveStatistics> statisticsMap = new HashMap<>();
@@ -66,13 +70,33 @@ public class StatisticsCalculator {
     }
     
     //5. коэффициенты ковариации для всех пар случайных чисел
-    public Map<String, Double> calculateCovarianceMatrix(){
-        Map<String, Double> results = new HashMap<>();
-//        for (String key : statisticsMap.keySet()) {
-//            results.put(key, (statisticsMap.get(key));
-//        }
-        return results;
+    public Map<String, Map<String, Double>> calculateCovarianceMatrix() {
+        List<String> keys = new ArrayList<>(statisticsMap.keySet());
+        int numVars = keys.size(); //кол-во переменных
+        int numRows = (int)statisticsMap.get(keys.get(0)).getN(); // кол-во элеиентов
+
+        //заполняем массив данных для RealMatrix -> getCovarianceMatrix
+        double[][] dataArray = new double[numRows][numVars];
+        for (int col = 0; col < numVars; col++) {
+            double[] values = statisticsMap.get(keys.get(col)).getValues();
+            for (int row = 0; row < numRows; row++) {
+                dataArray[row][col] = values[row];
+            }
+        }
+        Covariance covariance = new Covariance(dataArray);
+        RealMatrix covarianceMatrix = covariance.getCovarianceMatrix();
+        //обратно из марицы в hashmap
+        Map<String, Map<String, Double>> result = new LinkedHashMap<>();
+        for (int i = 0; i < numVars; i++) {
+            Map<String, Double> rowMap = new LinkedHashMap<>();
+            for (int j = 0; j < numVars; j++) {
+                rowMap.put(keys.get(j), covarianceMatrix.getEntry(i, j));
+            }
+            result.put(keys.get(i), rowMap);
+        }
+        return result;
     }
+    
     //6. количество элементов в каждой выборке
     public Map<String, Double> calculateSize() {
         Map<String, Double> results = new HashMap<>();

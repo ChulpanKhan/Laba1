@@ -6,8 +6,6 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileChooserView {
-    
-    static File inputFile = null;
 
     public static File selectInputFile() {
         JFileChooser fileChooser = new JFileChooser();
@@ -16,15 +14,11 @@ public class FileChooserView {
 
         int userSelection = fileChooser.showOpenDialog(null);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-             inputFile = fileChooser.getSelectedFile();
-            return inputFile;
+            return fileChooser.getSelectedFile();
         }
-        return inputFile; // Если файл не выбран
+        return null; // Если файл не выбран
     }
     
-    public static boolean inputIsSelected() {
-        return (inputFile != null);
-    }
 
     public static String selectSheet(String[] sheetNames) {
         return (String) JOptionPane.showInputDialog(

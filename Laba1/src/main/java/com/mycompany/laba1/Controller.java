@@ -1,5 +1,7 @@
 
 // матрица ковариации
+// TDist для доверительного интервала
+//сделать размер ячеек
 package com.mycompany.laba1;
 
 import java.io.File;
@@ -80,6 +82,8 @@ public class Controller {
         statistics.put("Дисперсия", calculator.calculateVariance());
         statistics.put("Минимум", calculator.calculateMin());
         statistics.put("Максимум", calculator.calculateMax());
+        statistics.put("Нижняя", calculator.calculateLowerBoundOfConfidenceInterval(0.95));
+        statistics.put("Верхняя", calculator.calculateUpperBoundOfConfidenceInterval(0.95));
                
 
         try {
