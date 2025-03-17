@@ -1,17 +1,12 @@
-//что сделано:
-//импорт в DataStorage
+
 // матрица ковариации
-// как сделать порядок
 package com.mycompany.laba1;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class Controller {
     private GUIView view;
@@ -34,7 +29,8 @@ public class Controller {
     private void handleImport() {
         File file = FileChooserView.selectInputFile();
         if (file == null) {
-            JOptionPane.showMessageDialog(view, "Файл не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(view, "Файл не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            view.getErrorPane("Файл не выбран!");
             return;
         }
         try {
@@ -46,9 +42,11 @@ public class Controller {
             
             dataStorage = ExcelReader.importData(file, selectedSheet);
             if (dataStorage.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Выбранный лист пуст!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                //JOptionPane.showMessageDialog(view, "Выбранный лист пуст!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                view.getErrorPane("Выбранный лист пуст!");
                 return;
             }
+            JOptionPane.showMessageDialog(view, "Файл успешно сохранен: " + file.getAbsolutePath(), "Информация", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(view, "Ошибка загрузки файла", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -57,13 +55,15 @@ public class Controller {
     }
 
     private void handleExport() {
-//        if (FileChooserView.inputIsSelected()) {
-//            JOptionPane.showMessageDialog(view, "Файл для импорта не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
+        if (dataStorage.isEmpty()) {
+            //JOptionPane.showMessageDialog(view, "Файл для импорта не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            view.getErrorPane("Файл для импорта не выбран!");
+            return;
+        }
         File outputFile = FileChooserView.selectOutputFile();
         if (outputFile == null) {
-            JOptionPane.showMessageDialog(view, "Файл не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(view, "Файл не выбран!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            view.getErrorPane("Файл не выбран!");
                 return;
         }
         
@@ -85,9 +85,10 @@ public class Controller {
         try {
             ExcelWriter.writeStatistics(outputFile, statistics);
             System.out.println("Файл успешно сохранен: " + outputFile.getAbsolutePath());
-            JOptionPane.showMessageDialog(view, "Файл успешно сохранен: " + outputFile.getAbsolutePath(), "Ошибка", JOptionPane.ERROR_MESSAGE);
-                return;
+            JOptionPane.showMessageDialog(view, "Файл успешно сохранен: " + outputFile.getAbsolutePath(), "Информация", JOptionPane.INFORMATION_MESSAGE);
+                //return;
         } catch (IOException e) {
+            view.getErrorPane("Ошибка при сохранении файла: " + e.getMessage());
             System.out.println("Ошибка при сохранении файла: " + e.getMessage());
         }
     }

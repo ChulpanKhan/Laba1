@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class GUIView extends JFrame{
     private JButton importButton;
@@ -39,5 +40,13 @@ public class GUIView extends JFrame{
 
     public JButton getExitButton() {
         return exitButton;
+    }
+    
+    public void getInformationPane(String text) {
+        JOptionPane.showMessageDialog(this, text, "Информация", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void getErrorPane(String text) {
+        JOptionPane.showMessageDialog(this, text, "Ошибка", JOptionPane.ERROR_MESSAGE);
     }
 }
