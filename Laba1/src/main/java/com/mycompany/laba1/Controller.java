@@ -1,19 +1,13 @@
 
-// матрица ковариации
-// TDist для доверительного интервала
-//сделать размер ячеек
 package com.mycompany.laba1;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.swing.JOptionPane;
 
 public class Controller {
     private GUIView view;
     private DataStorage dataStorage;
-    //private StatisticsCalculator calculator;
     
     public Controller() {
         this.view = new GUIView();  
@@ -61,7 +55,7 @@ public class Controller {
         File outputFile = FileChooserView.selectOutputFile();
         if (outputFile == null) {
             view.getErrorPane("Файл не выбран!");
-                return;
+            return;
         }
         
         StatisticsCollector collector = new StatisticsCollector(dataStorage.getData());

@@ -31,3 +31,5 @@ public class StatisticsCollector {
         return calculator.calculateCovarianceMatrix();
     }
 }
+
+

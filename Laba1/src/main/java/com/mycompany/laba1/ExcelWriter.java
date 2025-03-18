@@ -1,9 +1,4 @@
-/*
-имя : xyz
-среднее
-геом мреднее
-и тд
- */
+
 package com.mycompany.laba1;
 
 import java.io.File;
