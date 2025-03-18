@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 public class GUIView extends JFrame{
     private JButton importButton;
-    private JButton calculateButton;
     private JButton exportButton;
     private JButton exitButton;
     

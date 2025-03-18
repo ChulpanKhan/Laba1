@@ -23,9 +23,10 @@ import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.linear.RealMatrix;
 
 public class StatisticsCalculator {
-    private final Map<String, DescriptiveStatistics> statisticsMap = new HashMap<>();
+    private final Map<String, DescriptiveStatistics> statisticsMap;
     
     public StatisticsCalculator(Map<String, List<Double>> data) {
+        this.statisticsMap = new HashMap<>();
         for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
             DescriptiveStatistics stats = new DescriptiveStatistics();
             for (double value : entry.getValue()) {

@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class Controller {
     private GUIView view;
     private DataStorage dataStorage;
-    private StatisticsCalculator calculator;
+    //private StatisticsCalculator calculator;
     
     public Controller() {
         this.view = new GUIView();  
@@ -23,12 +23,12 @@ public class Controller {
     }
 
     private void activateButtons() {
-        view.getImportButton().addActionListener(e -> handleImport());
-        view.getExportButton().addActionListener(e -> handleExport());
+        view.getImportButton().addActionListener(e -> importData());
+        view.getExportButton().addActionListener(e -> exportData());
         view.getExitButton().addActionListener(e -> System.exit(0));
     }
 
-    private void handleImport() {
+    private void importData() {
         File file = FileChooserView.selectInputFile();
         if (file == null) {
             view.getErrorPane("Файл не выбран!");
@@ -53,7 +53,7 @@ public class Controller {
     
     }
 
-    private void handleExport() {
+    private void exportData() {
         if (dataStorage.isEmpty()) {
             view.getErrorPane("Файл для импорта не выбран!");
             return;
