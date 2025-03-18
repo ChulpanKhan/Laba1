@@ -16,7 +16,7 @@ public class FileChooserView {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             return fileChooser.getSelectedFile();
         }
-        return null; // Если файл не выбран
+        return null;
     }
     
 

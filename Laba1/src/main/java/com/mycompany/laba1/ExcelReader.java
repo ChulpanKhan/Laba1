@@ -39,7 +39,7 @@ public class ExcelReader {
             List<String> columnNames = getColumnNames(sheet);
            
             Map<String, List<Double>> dataMap = extractData(sheet, columnNames);  
-            // Добавляем данные в storage
+            
             for (Map.Entry<String, List<Double>> entry : dataMap.entrySet()) {
                 storage.addData(entry.getKey(), entry.getValue());
             }
